@@ -1,9 +1,11 @@
 // app/route/usuarios.js
 let UserController = require("../controllers/usuarioController.js");
+let auth = require('../controllers/auth')
 
 module.exports = function(app){
-    app.post('/api/usuarios',UserController.inserirUsuario);
+    app.post('/api/usuarios', UserController.inserirUsuario);
     
+
     app.post('/api/usuarios/signin', auth.logar);
 
 
