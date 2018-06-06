@@ -1,9 +1,11 @@
-// app/controllers/usuarioController.js
 var Usuario = require('../models/usuarioModel.js');
 var Post = require('../models/postModel.js');
+let bcrypt = require('bcrypt');
 
 module.exports.listaUsuarios = function(req, res){
     let promise = Usuario.find().populate('posts').exec();
+
+
     if(req.query.nome){
         let nome = nome;
         promisse = promisse.find({nome:{'Seq':nome}});
@@ -38,16 +40,24 @@ module.exports.obterUsuario = function(req, res){
  };
 
 module.exports.inserirUsuario = function(req, res){
-    let promise = Usuario.create(req.body)
+    let usuario = new Usuario({
+        
+        nome: req.body.nome,
+        email: req.body.email,
+        senha: bcrypt.hashSync(req.body.senha, 10)
+    });
+
+    let promise = Usuario.create(usuario);
+    
     promise.then(
-        function(usuario) {
-            res.status(201).json(usuario);
+        function(usuario){
+            res.status(200).json(usuario);
         }
     ).catch(
-        function(erro){
-            res.status(500).json(erro);
+        function(error){
+            res.status(404).send('Não Deu');
         }
-    );
+    )
 }
 module.exports.deleteUsuario = function(req, res){
     var id = req.params.id;
